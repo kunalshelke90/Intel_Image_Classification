@@ -1,6 +1,6 @@
 import os,sys
 from src.intel.components.data_ingestion import DataIngestion
-# from src.intel.components.data_validation import DataValidation
+from src.intel.components.data_validation import DataValidation
 # from src.intel.components.model_training import ModelTraining
 # from src.intel.components.model_evaluation import ModelEvaluation
 # from src.intel.components.mode_pusher import ModelPusher
@@ -27,13 +27,22 @@ class TrainPipeline:
         except Exception as e:
             raise CustomException(e,sys) from e
         
+    def start_data_validation(self,data_ingestion_artifact : DataIngestionArtifacts)-> DataValidationArtifact:
+        try:
+            logging.info("Entered the start_data_validation method of TrainPipeline class")
+            data_validation = DataValidation(data_ingestion_artifact=data_ingestion_artifact)
+            data_validation_artifact = data_validation.initiate_data_validation()
+            logging.info("Exited the start_data_validation method of TrainPipeline class")
+            return data_validation_artifact
+        except Exception as e:
+            raise CustomException(e,sys)    
         
     def run_pipeline(self) -> None:
         try:
             logging.info("=================Training pipeline Started =====================")
             
             data_ingestion_artifact = self.start_data_ingestion()
-            # data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+            data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
             # if data_validation_artifact.validation_status:
             #     model_trainer_artifact = self.start_model_trainer(data_ingestion_artifact=data_ingestion_artifact)
             #     model_evaluation_artifacts = self.start_model_evaluation(data_ingestion_artifact, model_trainer_artifact)

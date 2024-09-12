@@ -10,5 +10,6 @@ joblib
 flask
 pandas
 torch
-torch-vision
+torchvision
+matplotlib
 -e .
