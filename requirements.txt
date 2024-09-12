@@ -9,5 +9,6 @@ types-s3transfer==0.6.0.post4
 joblib
 flask
 pandas
-
+torch
+torch-vision
 -e .
