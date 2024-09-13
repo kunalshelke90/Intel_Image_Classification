@@ -1,7 +1,7 @@
 import os,sys
 from src.intel.components.data_ingestion import DataIngestion
 from src.intel.components.data_validation import DataValidation
-# from src.intel.components.model_training import ModelTraining
+from src.intel.components.model_training import ModelTraining
 # from src.intel.components.model_evaluation import ModelEvaluation
 # from src.intel.components.mode_pusher import ModelPusher
 from src.intel.logger import logging
@@ -13,7 +13,7 @@ from src.intel.configuration.s3_opearations import S3Operation
 class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
-        # self.model_trainer_config = ModelTrainerConfig()
+        self.model_trainer_config = ModelTrainerConfig()
         # self.model_evaluation_config = ModelEvaluationConfig()
 
     def start_data_ingestion(self)-> DataIngestionArtifacts:
@@ -36,6 +36,20 @@ class TrainPipeline:
             return data_validation_artifact
         except Exception as e:
             raise CustomException(e,sys)    
+
+    def start_model_trainer(self,data_ingestion_artifact : DataIngestionArtifacts):
+        try:
+            logging.info("Entered the start_model_trainer method of TrainPipeline class")
+            
+            model_trainer = ModelTraining(data_ingestion_artifact=data_ingestion_artifact,
+            model_trainer_config=self.model_trainer_config)
+            model_trainer_artifact =  model_trainer.initiate_model_trainer()
+            logging.info("Exited the start_transformation method of TrainPipeline class")
+            return model_trainer_artifact
+        except Exception as e:
+            raise CustomException(e,sys)
+
+
         
     def run_pipeline(self) -> None:
         try:
@@ -43,8 +57,8 @@ class TrainPipeline:
             
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-            # if data_validation_artifact.validation_status:
-            #     model_trainer_artifact = self.start_model_trainer(data_ingestion_artifact=data_ingestion_artifact)
+            if data_validation_artifact.validation_status:
+                model_trainer_artifact = self.start_model_trainer(data_ingestion_artifact=data_ingestion_artifact)
             #     model_evaluation_artifacts = self.start_model_evaluation(data_ingestion_artifact, model_trainer_artifact)
             #     if model_evaluation_artifacts.is_model_accepted:
             #         model_pusher_artifact = self.start_model_pusher(model_evaluation_artifacts=model_evaluation_artifacts)
