@@ -31,7 +31,7 @@ class DataValidation:
             if not status:
                 validation_error_msg += "Classes are missing in test data"
             
-            validation_status = len(validation_error_msg) == 1
+            validation_status = len(validation_error_msg) == 0
 
             data_validation_artifact = DataValidationArtifact(
                 validation_status=validation_status

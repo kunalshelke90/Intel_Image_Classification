@@ -17,7 +17,7 @@ ARTIFACTS_DIR = os.path.join(from_root(), "artifacts")
 BUCKET_NAME = 'xraybucket'
 S3_DATA_FOLDER_NAME = "data.zip"
 DATA_INGESTION_ARTIFACTS_DIR = "DataIngestion"
-UNZIP_FOLDER_NAME = ''
+UNZIP_FOLDER_NAME = 'data/'
 
 
 # Data Validation related constants

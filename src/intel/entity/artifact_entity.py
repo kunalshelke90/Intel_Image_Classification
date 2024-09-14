@@ -28,3 +28,4 @@ class ModelEvaluationArtifacts:
 @dataclass
 class ModelPusherArtifacts:
     response: dict
+    
